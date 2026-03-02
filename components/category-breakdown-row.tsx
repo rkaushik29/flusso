@@ -8,6 +8,7 @@ type CategoryBreakdownRowProps = {
   name: string;
   total: number;
   maxTotal: number;
+  symbol: string;
 };
 
 export function CategoryBreakdownRow({
@@ -15,6 +16,7 @@ export function CategoryBreakdownRow({
   name,
   total,
   maxTotal,
+  symbol,
 }: CategoryBreakdownRowProps) {
   const pct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
 
@@ -31,7 +33,7 @@ export function CategoryBreakdownRow({
         <View className="flex-row items-center justify-between">
           <Text className="text-sm">{name}</Text>
           <Text className="text-sm font-medium">
-            {"\u20ac"}
+            {symbol}
             {total.toFixed(0)}
           </Text>
         </View>

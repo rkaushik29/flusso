@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, TextInput } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 
@@ -8,10 +8,14 @@ import { EditCategoryDialog } from "@/components/edit-category-dialog";
 import { RecurringItemRow } from "@/components/recurring-item-row";
 import { EditRecurringDialog } from "@/components/edit-recurring-dialog";
 import { BudgetEditor } from "@/components/budget-editor";
+import { SegmentedControl } from "@/components/segmented-control";
 import { SwipeableRow } from "@/components/swipeable-row";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { Separator } from "@/components/ui/separator";
+import { useCurrency } from "@/lib/currency-context";
+import { useColorScheme } from "@/lib/theme";
+import type { Currency } from "@/lib/constants";
 import {
   getCategories,
   getRecurringItems,
@@ -32,8 +36,11 @@ function currentMonth() {
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
+  const { isDarkColorScheme } = useColorScheme();
   const month = currentMonth();
 
+  const { currency, setCurrency, conversionRate, setConversionRate } =
+    useCurrency();
   const { data: allCategories = [] } = useLiveQuery(getCategories());
   const { data: recurringItemsRaw = [] } = useLiveQuery(getRecurringItems());
   const { data: budgetRows = [] } = useLiveQuery(getBudgetForMonth(month));
@@ -43,6 +50,17 @@ export default function SettingsScreen() {
     discretionaryPercent: 30,
     investmentPercent: 20,
   };
+
+  // Conversion rate local state for editing
+  const [rateText, setRateText] = useState(String(conversionRate));
+  const handleRateBlur = useCallback(() => {
+    const parsed = parseFloat(rateText);
+    if (!isNaN(parsed) && parsed > 0) {
+      setConversionRate(parsed);
+    } else {
+      setRateText(String(conversionRate));
+    }
+  }, [rateText, conversionRate, setConversionRate]);
 
   // Category dialog
   const [catDialogOpen, setCatDialogOpen] = useState(false);
@@ -107,12 +125,48 @@ export default function SettingsScreen() {
       contentContainerStyle={{
         paddingTop: insets.top + 16,
         paddingBottom: 40,
-        gap: 16,
+        gap: 12,
       }}
     >
       <Text variant="h3" className="px-4 text-left">
         Settings
       </Text>
+
+      {/* Currency */}
+      <Card className="mx-4">
+        <CardHeader>
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Currency
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="gap-4">
+          <SegmentedControl<Currency>
+            segments={[
+              { label: "EUR (\u20ac)", value: "EUR" },
+              { label: "CAD (CA$)", value: "CAD" },
+            ]}
+            value={currency}
+            onValueChange={setCurrency}
+          />
+          <View className="flex-row items-center gap-3">
+            <Text className="text-sm text-muted-foreground">1 EUR =</Text>
+            <TextInput
+              value={rateText}
+              onChangeText={(t) => {
+                if (/^\d*\.?\d{0,4}$/.test(t) || t === "") setRateText(t);
+              }}
+              onBlur={handleRateBlur}
+              keyboardType="decimal-pad"
+              textAlignVertical="center"
+              className="w-20 rounded-lg border border-input bg-background px-3 py-2 text-center text-base leading-5 text-foreground"
+              placeholderTextColor={
+                isDarkColorScheme ? "hsl(30, 5%, 55%)" : "hsl(30, 5%, 45%)"
+              }
+            />
+            <Text className="text-sm text-muted-foreground">CAD</Text>
+          </View>
+        </CardContent>
+      </Card>
 
       {/* Budget Split */}
       <BudgetEditor
@@ -123,11 +177,9 @@ export default function SettingsScreen() {
         className="mx-4"
       />
 
-      <Separator className="mx-4" />
-
       {/* Categories */}
       <View className="px-4">
-        <View className="flex-row items-center justify-between">
+        <View className="flex-row items-center justify-between mb-2">
           <Text variant="large">Categories</Text>
           <Button
             variant="ghost"
@@ -140,28 +192,28 @@ export default function SettingsScreen() {
             <Text className="text-primary text-sm">+ Add</Text>
           </Button>
         </View>
-        <View className="mt-2">
-          {allCategories.map((cat) => (
-            <SwipeableRow
-              key={cat.id}
-              onDelete={() => handleDeleteCategory(cat.id)}
-            >
-              <CategoryEditRow
-                icon={cat.icon}
-                name={cat.name}
-                type={cat.type}
-                budgetType={cat.budgetType}
-              />
-            </SwipeableRow>
-          ))}
-        </View>
+        <Card>
+          <CardContent className="px-0 py-0">
+            {allCategories.map((cat) => (
+              <SwipeableRow
+                key={cat.id}
+                onDelete={() => handleDeleteCategory(cat.id)}
+              >
+                <CategoryEditRow
+                  icon={cat.icon}
+                  name={cat.name}
+                  type={cat.type}
+                  budgetType={cat.budgetType}
+                />
+              </SwipeableRow>
+            ))}
+          </CardContent>
+        </Card>
       </View>
-
-      <Separator className="mx-4" />
 
       {/* Recurring Items */}
       <View className="px-4">
-        <View className="flex-row items-center justify-between">
+        <View className="flex-row items-center justify-between mb-2">
           <Text variant="large">Recurring</Text>
           <Button
             variant="ghost"
@@ -174,29 +226,33 @@ export default function SettingsScreen() {
             <Text className="text-primary text-sm">+ Add</Text>
           </Button>
         </View>
-        <View className="mt-2">
-          {recurringItemsRaw.length === 0 ? (
-            <Text className="py-4 text-center text-muted-foreground">
-              No recurring items
-            </Text>
-          ) : (
-            recurringItemsRaw.map(({ recurringItem: item }) => (
-              <SwipeableRow
-                key={item.id}
-                onDelete={() => handleDeleteRecurring(item.id)}
-              >
-                <RecurringItemRow
-                  name={item.name}
-                  amount={item.amount}
-                  currency={item.currency}
-                  type={item.type}
-                  isActive={item.isActive}
-                  onToggle={(active) => handleToggleRecurring(item.id, active)}
-                />
-              </SwipeableRow>
-            ))
-          )}
-        </View>
+        <Card>
+          <CardContent className="px-0 py-0">
+            {recurringItemsRaw.length === 0 ? (
+              <Text className="py-4 text-center text-muted-foreground">
+                No recurring items
+              </Text>
+            ) : (
+              recurringItemsRaw.map(({ recurringItem: item }) => (
+                <SwipeableRow
+                  key={item.id}
+                  onDelete={() => handleDeleteRecurring(item.id)}
+                >
+                  <RecurringItemRow
+                    name={item.name}
+                    amount={item.amount}
+                    currency={item.currency}
+                    type={item.type}
+                    isActive={item.isActive}
+                    onToggle={(active) =>
+                      handleToggleRecurring(item.id, active)
+                    }
+                  />
+                </SwipeableRow>
+              ))
+            )}
+          </CardContent>
+        </Card>
       </View>
 
       {/* Dialogs */}

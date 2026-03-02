@@ -18,12 +18,14 @@ const COLORS = [
 type PieChartCardProps = {
   data: { name: string; total: number }[];
   totalExpense: number;
+  symbol: string;
   className?: string;
 };
 
 export function PieChartCard({
   data,
   totalExpense,
+  symbol,
   className,
 }: PieChartCardProps) {
   if (data.length === 0) {
@@ -65,7 +67,7 @@ export function PieChartCard({
             <View className="items-center">
               <Text className="text-xs text-muted-foreground">Total</Text>
               <Text className="text-sm font-bold">
-                {"\u20ac"}
+                {symbol}
                 {totalExpense.toFixed(0)}
               </Text>
             </View>

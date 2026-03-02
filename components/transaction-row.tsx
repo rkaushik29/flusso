@@ -10,6 +10,7 @@ type TransactionRowProps = {
   category: string;
   amount: number;
   type: "income" | "expense";
+  symbol: string;
   className?: string;
 };
 
@@ -19,6 +20,7 @@ export function TransactionRow({
   category,
   amount,
   type,
+  symbol,
   className,
 }: TransactionRowProps) {
   return (
@@ -41,7 +43,7 @@ export function TransactionRow({
         )}
       >
         {type === "income" ? "+" : "-"}
-        {"\u20ac"}
+        {symbol}
         {amount.toFixed(2)}
       </Text>
     </View>

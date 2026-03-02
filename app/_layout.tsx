@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
 import { DatabaseProvider } from "@/db/provider";
+import { CurrencyProvider } from "@/lib/currency-context";
 import { useColorScheme } from "@/lib/theme";
 import { NAV_THEME } from "@/lib/constants";
 
@@ -21,10 +22,12 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={isDarkColorScheme ? NAV_THEME.dark : NAV_THEME.light}>
         <DatabaseProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-          <StatusBar style="auto" />
+          <CurrencyProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+            <StatusBar style="auto" />
+          </CurrencyProvider>
         </DatabaseProvider>
         <PortalHost />
       </ThemeProvider>

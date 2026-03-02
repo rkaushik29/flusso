@@ -1,12 +1,14 @@
 import { useState, useCallback } from "react";
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 import { getCategoriesByType, insertTransaction } from "@/db/queries";
+import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/constants";
 
 export function useTransactionForm() {
+  const { currency: globalCurrency } = useCurrency();
   const [type, setType] = useState<"expense" | "income">("expense");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState<Currency>("EUR");
+  const [currency, setCurrency] = useState<Currency>(globalCurrency);
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(() => {
@@ -23,13 +25,14 @@ export function useTransactionForm() {
 
   const reset = useCallback(() => {
     setAmount("");
+    setCurrency(globalCurrency);
     setCategoryId(null);
     setDescription("");
     const now = new Date();
     setDate(
       `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
     );
-  }, []);
+  }, [globalCurrency]);
 
   const submit = useCallback(async () => {
     if (!isValid) return false;

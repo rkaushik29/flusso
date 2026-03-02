@@ -5,6 +5,7 @@ import {
   getMonthlyTotalsByCategory,
   getMonthlyTotalsForRange,
 } from "@/db/queries";
+import { useCurrency } from "@/lib/currency-context";
 
 function subtractMonths(month: string, count: number) {
   const [y, m] = month.split("-").map(Number);
@@ -13,19 +14,22 @@ function subtractMonths(month: string, count: number) {
 }
 
 export function useReportsData(month: string) {
-  const { data: totalsRaw = [] } = useLiveQuery(getMonthlyTotals(month), [
-    month,
-  ]);
+  const { currency } = useCurrency();
+
+  const { data: totalsRaw = [] } = useLiveQuery(
+    getMonthlyTotals(month, currency),
+    [month, currency]
+  );
 
   const { data: categoryTotals = [] } = useLiveQuery(
-    getMonthlyTotalsByCategory(month),
-    [month]
+    getMonthlyTotalsByCategory(month, currency),
+    [month, currency]
   );
 
   const startMonth = subtractMonths(month, 5);
   const { data: rangeRaw = [] } = useLiveQuery(
-    getMonthlyTotalsForRange(startMonth, month),
-    [month]
+    getMonthlyTotalsForRange(startMonth, month, currency),
+    [month, currency]
   );
 
   const totals = useMemo(() => {

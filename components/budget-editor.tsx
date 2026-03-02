@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { View, TextInput } from "react-native";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import { useColorScheme } from "@/lib/theme";
@@ -105,14 +104,15 @@ function PercentInput({
 }) {
   return (
     <View className="flex-row items-center gap-3">
-      <Label className={cn("w-28", colorClass)}>{label}</Label>
+      <Text className={cn("w-28 text-sm font-medium", colorClass)}>{label}</Text>
       <TextInput
         value={value}
         onChangeText={(t) => {
           if (/^\d*\.?\d{0,1}$/.test(t) || t === "") onChange(t);
         }}
         keyboardType="decimal-pad"
-        className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-base text-foreground"
+        textAlignVertical="center"
+        className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-base leading-5 text-foreground"
         placeholderTextColor={isDark ? "hsl(30, 5%, 55%)" : "hsl(30, 5%, 45%)"}
       />
       <Text className="text-muted-foreground">%</Text>

@@ -5,9 +5,11 @@ import { cn } from "@/lib/utils";
 
 export function IncomeCard({
   income,
+  symbol,
   className,
 }: {
   income: number;
+  symbol: string;
   className?: string;
 }) {
   return (
@@ -19,7 +21,7 @@ export function IncomeCard({
       </CardHeader>
       <CardContent>
         <Text className="text-3xl font-bold text-income">
-          {"\u20ac"}
+          {symbol}
           {income.toFixed(2)}
         </Text>
       </CardContent>

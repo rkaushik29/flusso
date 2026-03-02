@@ -10,6 +10,7 @@ import { CategoryBreakdownRow } from "@/components/category-breakdown-row";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { useReportsData } from "@/hooks/use-reports-data";
+import { useCurrency } from "@/lib/currency-context";
 
 function currentMonth() {
   const now = new Date();
@@ -19,6 +20,7 @@ function currentMonth() {
 export default function ReportsScreen() {
   const insets = useSafeAreaInsets();
   const [month, setMonth] = useState(currentMonth);
+  const { symbol } = useCurrency();
   const { savingsRate, categoryBreakdown, totalExpense, monthlyBars } =
     useReportsData(month);
 
@@ -40,6 +42,7 @@ export default function ReportsScreen() {
       <PieChartCard
         data={categoryBreakdown}
         totalExpense={totalExpense}
+        symbol={symbol}
         className="mx-4"
       />
 
@@ -65,6 +68,7 @@ export default function ReportsScreen() {
                 name={c.name}
                 total={c.total}
                 maxTotal={maxCategory}
+                symbol={symbol}
               />
             ))
           )}

@@ -13,7 +13,7 @@ export function Fab({
     <Pressable
       onPress={onPress}
       className={cn(
-        "absolute bottom-20 right-5 h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-black/20 active:scale-95",
+        "absolute bottom-20 right-5 h-14 w-14 items-center justify-center rounded-full bg-primary active:scale-95",
         className
       )}
     >

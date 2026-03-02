@@ -15,6 +15,7 @@ type BudgetSectionProps = {
   spent: number;
   budget: number;
   colorClass: string;
+  symbol: string;
   children?: React.ReactNode;
   className?: string;
 };
@@ -24,6 +25,7 @@ export function BudgetSection({
   spent,
   budget,
   colorClass,
+  symbol,
   children,
   className,
 }: BudgetSectionProps) {
@@ -64,8 +66,8 @@ export function BudgetSection({
                 overBudget ? "text-expense font-semibold" : "text-muted-foreground"
               )}
             >
-              {"\u20ac"}
-              {spent.toFixed(0)} / {"\u20ac"}
+              {symbol}
+              {spent.toFixed(0)} / {symbol}
               {budget.toFixed(0)}
             </Text>
           </View>

@@ -36,13 +36,13 @@ export function SegmentedControl<T extends string>({
     >
       <Animated.View
         style={indicatorStyle}
-        className="absolute top-1 bottom-1 rounded-md bg-background shadow-sm"
+        className="absolute top-1 bottom-1 rounded-md bg-background"
       />
       {segments.map((segment) => (
         <Pressable
           key={segment.value}
           onPress={() => onValueChange(segment.value)}
-          className="flex-1 items-center py-2"
+          className="flex-1 items-center justify-center py-2"
         >
           <Text
             className={cn(

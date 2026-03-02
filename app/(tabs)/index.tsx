@@ -12,6 +12,7 @@ import { SummaryBar } from "@/components/summary-bar";
 import { Fab } from "@/components/fab";
 import { Text } from "@/components/ui/text";
 import { useMonthlyData } from "@/hooks/use-monthly-data";
+import { useCurrency } from "@/lib/currency-context";
 import { deleteTransaction } from "@/db/queries";
 
 function currentMonth() {
@@ -23,6 +24,7 @@ export default function OverviewScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const [month, setMonth] = useState(currentMonth);
+  const { symbol } = useCurrency();
   const { transactions, totals, budgetTypeTotals, budget } =
     useMonthlyData(month);
 
@@ -52,7 +54,7 @@ export default function OverviewScreen() {
       >
         <MonthPicker month={month} onMonthChange={setMonth} className="px-4 py-2" />
 
-        <IncomeCard income={totals.income} className="mx-4 mt-2" />
+        <IncomeCard income={totals.income} symbol={symbol} className="mx-4 mt-2" />
 
         {/* Budget Sections */}
         <View className="mt-4 px-4">
@@ -65,12 +67,14 @@ export default function OverviewScreen() {
             spent={budgetTypeTotals.essential ?? 0}
             budget={essentialBudget}
             colorClass="bg-essential"
+            symbol={symbol}
           >
             <TransactionList
               transactions={expenseTransactions.filter(
                 (t) => t.category?.budgetType === "essential"
               )}
               onDelete={handleDelete}
+              symbol={symbol}
             />
           </BudgetSection>
 
@@ -79,12 +83,14 @@ export default function OverviewScreen() {
             spent={budgetTypeTotals.discretionary ?? 0}
             budget={discretionaryBudget}
             colorClass="bg-discretionary"
+            symbol={symbol}
           >
             <TransactionList
               transactions={expenseTransactions.filter(
                 (t) => t.category?.budgetType === "discretionary"
               )}
               onDelete={handleDelete}
+              symbol={symbol}
             />
           </BudgetSection>
 
@@ -93,12 +99,14 @@ export default function OverviewScreen() {
             spent={budgetTypeTotals.investment ?? 0}
             budget={investmentBudget}
             colorClass="bg-investment"
+            symbol={symbol}
           >
             <TransactionList
               transactions={expenseTransactions.filter(
                 (t) => t.category?.budgetType === "investment"
               )}
               onDelete={handleDelete}
+              symbol={symbol}
             />
           </BudgetSection>
         </View>
@@ -118,6 +126,7 @@ export default function OverviewScreen() {
             <TransactionList
               transactions={transactions}
               onDelete={handleDelete}
+              symbol={symbol}
             />
           )}
         </View>
@@ -127,6 +136,7 @@ export default function OverviewScreen() {
         income={totals.income}
         expenses={totals.expense}
         savings={totals.savings}
+        symbol={symbol}
       />
 
       <Fab onPress={() => router.push("/(tabs)/add")} />
@@ -137,12 +147,14 @@ export default function OverviewScreen() {
 function TransactionList({
   transactions,
   onDelete,
+  symbol,
 }: {
   transactions: Array<{
     transaction: { id: number; amount: number; type: "income" | "expense"; description: string };
     category: { name: string; icon: string; budgetType?: string | null } | null;
   }>;
   onDelete: (id: number) => void;
+  symbol: string;
 }) {
   if (transactions.length === 0) {
     return (
@@ -162,6 +174,7 @@ function TransactionList({
             category={c?.name ?? "Uncategorized"}
             amount={t.amount}
             type={t.type}
+            symbol={symbol}
           />
         </SwipeableRow>
       ))}

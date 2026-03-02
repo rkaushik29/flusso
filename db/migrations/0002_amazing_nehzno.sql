@@ -1,0 +1,1 @@
+ALTER TABLE `settings` ADD `conversion_rate` real DEFAULT 1.5 NOT NULL;

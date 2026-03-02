@@ -71,6 +71,14 @@ export const transactions = sqliteTable("transactions", {
     .$defaultFn(() => new Date()),
 });
 
+export const settings = sqliteTable("settings", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  displayCurrency: text("display_currency", { enum: ["EUR", "CAD"] })
+    .notNull()
+    .default("EUR"),
+  conversionRate: real("conversion_rate").notNull().default(1.5),
+});
+
 // Relations
 export const categoriesRelations = relations(categories, ({ many }) => ({
   transactions: many(transactions),

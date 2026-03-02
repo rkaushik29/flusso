@@ -4,8 +4,10 @@ import {
   categories,
   monthlyBudgets,
   recurringItems,
+  settings,
   transactions,
 } from "./schema";
+import type { Currency } from "@/lib/constants";
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -117,10 +119,26 @@ export function deleteRecurringItem(id: number) {
   return db.delete(recurringItems).where(eq(recurringItems.id, id));
 }
 
+// ── Settings ─────────────────────────────────────────────────────────
+
+export function getSettings() {
+  return db.select().from(settings).limit(1);
+}
+
+export function updateDisplayCurrency(currency: Currency) {
+  return db.update(settings).set({ displayCurrency: currency }).where(eq(settings.id, 1));
+}
+
+export function updateConversionRate(rate: number) {
+  return db.update(settings).set({ conversionRate: rate }).where(eq(settings.id, 1));
+}
+
 // ── Transactions ─────────────────────────────────────────────────────
 
-export function getTransactionsForMonth(month: string) {
+export function getTransactionsForMonth(month: string, currency?: Currency) {
   const { start, end } = monthRange(month);
+  const conditions = [between(transactions.date, start, end)];
+  if (currency) conditions.push(eq(transactions.currency, currency));
   return db
     .select({
       transaction: transactions,
@@ -128,7 +146,7 @@ export function getTransactionsForMonth(month: string) {
     })
     .from(transactions)
     .leftJoin(categories, eq(transactions.categoryId, categories.id))
-    .where(between(transactions.date, start, end))
+    .where(and(...conditions))
     .orderBy(desc(transactions.date), desc(transactions.createdAt));
 }
 
@@ -151,20 +169,27 @@ export function deleteTransaction(id: number) {
 
 // ── Aggregations ─────────────────────────────────────────────────────
 
-export function getMonthlyTotals(month: string) {
+export function getMonthlyTotals(month: string, currency?: Currency) {
   const { start, end } = monthRange(month);
+  const conditions = [between(transactions.date, start, end)];
+  if (currency) conditions.push(eq(transactions.currency, currency));
   return db
     .select({
       type: transactions.type,
       total: sum(transactions.amount).as("total"),
     })
     .from(transactions)
-    .where(between(transactions.date, start, end))
+    .where(and(...conditions))
     .groupBy(transactions.type);
 }
 
-export function getMonthlyTotalsByBudgetType(month: string) {
+export function getMonthlyTotalsByBudgetType(month: string, currency?: Currency) {
   const { start, end } = monthRange(month);
+  const conditions = [
+    between(transactions.date, start, end),
+    eq(transactions.type, "expense"),
+  ];
+  if (currency) conditions.push(eq(transactions.currency, currency));
   return db
     .select({
       budgetType: categories.budgetType,
@@ -172,17 +197,14 @@ export function getMonthlyTotalsByBudgetType(month: string) {
     })
     .from(transactions)
     .leftJoin(categories, eq(transactions.categoryId, categories.id))
-    .where(
-      and(
-        between(transactions.date, start, end),
-        eq(transactions.type, "expense")
-      )
-    )
+    .where(and(...conditions))
     .groupBy(categories.budgetType);
 }
 
-export function getMonthlyTotalsByCategory(month: string) {
+export function getMonthlyTotalsByCategory(month: string, currency?: Currency) {
   const { start, end } = monthRange(month);
+  const conditions = [between(transactions.date, start, end)];
+  if (currency) conditions.push(eq(transactions.currency, currency));
   return db
     .select({
       categoryId: transactions.categoryId,
@@ -193,14 +215,16 @@ export function getMonthlyTotalsByCategory(month: string) {
     })
     .from(transactions)
     .leftJoin(categories, eq(transactions.categoryId, categories.id))
-    .where(between(transactions.date, start, end))
+    .where(and(...conditions))
     .groupBy(transactions.categoryId)
     .orderBy(sql`total DESC`);
 }
 
-export function getMonthlyTotalsForRange(startMonth: string, endMonth: string) {
+export function getMonthlyTotalsForRange(startMonth: string, endMonth: string, currency?: Currency) {
   const start = `${startMonth}-01`;
   const end = `${endMonth}-31`;
+  const conditions = [between(transactions.date, start, end)];
+  if (currency) conditions.push(eq(transactions.currency, currency));
   return db
     .select({
       month: sql<string>`substr(${transactions.date}, 1, 7)`.as("month"),
@@ -208,7 +232,7 @@ export function getMonthlyTotalsForRange(startMonth: string, endMonth: string) {
       total: sum(transactions.amount).as("total"),
     })
     .from(transactions)
-    .where(between(transactions.date, start, end))
+    .where(and(...conditions))
     .groupBy(sql`month`, transactions.type)
     .orderBy(sql`month`);
 }

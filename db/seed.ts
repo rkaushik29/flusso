@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import type { db as DbType } from "./client";
-import { categories, monthlyBudgets } from "./schema";
+import { categories, monthlyBudgets, settings } from "./schema";
 
 const DEFAULT_CATEGORIES = [
   { name: "Salary", icon: "account-balance-wallet", type: "income" as const },
@@ -100,7 +100,13 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export async function seed(database: typeof DbType) {
-  // Check if already seeded
+  // Ensure settings row exists (runs even for already-seeded DBs)
+  const existingSettings = await database.select().from(settings).limit(1);
+  if (existingSettings.length === 0) {
+    await database.insert(settings).values({ displayCurrency: "EUR" });
+  }
+
+  // Check if categories already seeded
   const existing = await database
     .select()
     .from(categories)

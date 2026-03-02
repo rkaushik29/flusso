@@ -7,20 +7,24 @@ import {
   getMonthlyTotalsByBudgetType,
   getBudgetForMonth,
 } from "@/db/queries";
+import { useCurrency } from "@/lib/currency-context";
 
 export function useMonthlyData(month: string) {
+  const { currency } = useCurrency();
+
   const { data: transactions = [] } = useLiveQuery(
-    getTransactionsForMonth(month),
-    [month]
+    getTransactionsForMonth(month, currency),
+    [month, currency]
   );
 
-  const { data: totalsRaw = [] } = useLiveQuery(getMonthlyTotals(month), [
-    month,
-  ]);
+  const { data: totalsRaw = [] } = useLiveQuery(
+    getMonthlyTotals(month, currency),
+    [month, currency]
+  );
 
   const { data: budgetTypeRaw = [] } = useLiveQuery(
-    getMonthlyTotalsByBudgetType(month),
-    [month]
+    getMonthlyTotalsByBudgetType(month, currency),
+    [month, currency]
   );
 
   const { data: budgetRows = [] } = useLiveQuery(getBudgetForMonth(month), [
