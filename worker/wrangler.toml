@@ -1,0 +1,5 @@
+name = "flusso-worker"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+# Set via: wrangler secret put ANTHROPIC_API_KEY
