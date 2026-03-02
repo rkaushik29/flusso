@@ -1,7 +1,7 @@
 import { Animated, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 
 type SwipeableRowProps = {
   onDelete: () => void;
@@ -19,7 +19,7 @@ export function SwipeableRow({ onDelete, children }: SwipeableRowProps) {
       }}
       onPress={onDelete}
     >
-      <MaterialIcons name="delete" size={22} color="#fff" />
+      <AppIcon name="delete" size={22} color="#fff" duotoneColor="#fff" />
     </RectButton>
   );
 

@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 import { HapticTab } from "@/components/haptic-tab";
 import { useColorScheme } from "@/lib/theme";
 
@@ -24,7 +24,7 @@ export default function TabLayout() {
         options={{
           title: "Overview",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
+            <AppIcon name="home" size={size} color={color} duotoneColor={color} />
           ),
         }}
       />
@@ -33,7 +33,7 @@ export default function TabLayout() {
         options={{
           title: "Add",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="add-circle" size={size} color={color} />
+            <AppIcon name="add-circle" size={size} color={color} duotoneColor={color} />
           ),
         }}
       />
@@ -42,7 +42,7 @@ export default function TabLayout() {
         options={{
           title: "Reports",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="bar-chart" size={size} color={color} />
+            <AppIcon name="bar-chart" size={size} color={color} duotoneColor={color} />
           ),
         }}
       />
@@ -51,7 +51,7 @@ export default function TabLayout() {
         options={{
           title: "Settings",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="settings" size={size} color={color} />
+            <AppIcon name="settings" size={size} color={color} duotoneColor={color} />
           ),
         }}
       />

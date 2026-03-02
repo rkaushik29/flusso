@@ -1,8 +1,7 @@
 import { FlatList, Pressable, View } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
-import type { ComponentProps } from "react";
 
 type Category = {
   id: number;
@@ -41,17 +40,12 @@ export function CategoryPicker({
               isSelected ? "bg-primary" : "bg-muted active:bg-accent"
             )}
           >
-            <MaterialIcons
-              name={item.icon as ComponentProps<typeof MaterialIcons>["name"]}
-              size={22}
-              color={isSelected ? "hsl(36, 20%, 97%)" : undefined}
-              className={isSelected ? "" : "text-foreground"}
-            />
+            <AppIcon name={item.icon} size={22} />
             <Text
               className={cn(
-                "text-xs",
+                "text-xs font-semibold",
                 isSelected
-                  ? "text-primary-foreground font-medium"
+                  ? "text-primary-foreground"
                   : "text-muted-foreground"
               )}
               numberOfLines={1}

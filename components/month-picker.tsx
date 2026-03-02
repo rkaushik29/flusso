@@ -1,5 +1,5 @@
 import { Pressable, View } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 
@@ -45,7 +45,7 @@ export function MonthPicker({
         className="rounded-full p-2 active:bg-accent"
         hitSlop={12}
       >
-        <MaterialIcons name="chevron-left" size={24} className="text-foreground" />
+        <AppIcon name="chevron-left" size={24} />
       </Pressable>
       <Text className="text-lg font-semibold">{formatMonth(month)}</Text>
       <Pressable
@@ -53,7 +53,7 @@ export function MonthPicker({
         className="rounded-full p-2 active:bg-accent"
         hitSlop={12}
       >
-        <MaterialIcons name="chevron-right" size={24} className="text-foreground" />
+        <AppIcon name="chevron-right" size={24} />
       </Pressable>
     </View>
   );

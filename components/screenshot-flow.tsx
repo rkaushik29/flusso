@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { pickImage, takePhoto, parseReceipt, type ParsedReceipt } from "@/lib/ocr";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 
 type ScreenshotFlowProps = {
   onResult: (result: ParsedReceipt) => void;
@@ -77,7 +77,7 @@ export function ScreenshotFlow({ onResult }: ScreenshotFlowProps) {
           className="flex-1 flex-row gap-2"
           onPress={() => handlePick("library")}
         >
-          <MaterialIcons name="photo" size={18} className="text-foreground" />
+          <AppIcon name="photo" size={18} />
           <Text>Gallery</Text>
         </Button>
         <Button
@@ -85,7 +85,7 @@ export function ScreenshotFlow({ onResult }: ScreenshotFlowProps) {
           className="flex-1 flex-row gap-2"
           onPress={() => handlePick("camera")}
         >
-          <MaterialIcons name="camera-alt" size={18} className="text-foreground" />
+          <AppIcon name="camera-alt" size={18} />
           <Text>Camera</Text>
         </Button>
       </CardContent>

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { CHART_COLORS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { useColorScheme } from "@/lib/theme";
 
 type MonthBar = {
   label: string;
@@ -18,6 +19,8 @@ export function BarChartCard({
   data: MonthBar[];
   className?: string;
 }) {
+  const { isDarkColorScheme } = useColorScheme();
+  const axisColor = isDarkColorScheme ? "hsl(30, 8%, 55%)" : "hsl(30, 5%, 45%)";
   if (data.length === 0) {
     return (
       <Card className={cn(className)}>
@@ -65,6 +68,8 @@ export function BarChartCard({
           hideRules
           isAnimated
           barBorderRadius={3}
+          yAxisTextStyle={{ color: axisColor, fontSize: 10 }}
+          xAxisLabelTextStyle={{ color: axisColor, fontSize: 10 }}
         />
         <View className="mt-2 flex-row justify-center gap-4">
           <View className="flex-row items-center gap-1">

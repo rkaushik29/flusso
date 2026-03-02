@@ -10,12 +10,13 @@ import { EditRecurringDialog } from "@/components/edit-recurring-dialog";
 import { BudgetEditor } from "@/components/budget-editor";
 import { SegmentedControl } from "@/components/segmented-control";
 import { SwipeableRow } from "@/components/swipeable-row";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useCurrency } from "@/lib/currency-context";
 import { useColorScheme } from "@/lib/theme";
-import type { Currency } from "@/lib/constants";
+import { PLACEHOLDER_COLORS, type Currency } from "@/lib/constants";
 import {
   getCategories,
   getRecurringItems,
@@ -119,141 +120,162 @@ export default function SettingsScreen() {
     [month]
   );
 
+  const [tab, setTab] = useState("general");
+
   return (
-    <ScrollView
-      className="flex-1 bg-background"
-      contentContainerStyle={{
-        paddingTop: insets.top + 16,
-        paddingBottom: 40,
-        gap: 12,
-      }}
-    >
-      <Text variant="h3" className="px-4 text-left">
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top + 16 }}>
+      <Text variant="h3" className="px-4 text-left mb-3">
         Settings
       </Text>
 
-      {/* Currency */}
-      <Card className="mx-4">
-        <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Currency
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="gap-4">
-          <SegmentedControl<Currency>
-            segments={[
-              { label: "EUR (\u20ac)", value: "EUR" },
-              { label: "CAD (CA$)", value: "CAD" },
-            ]}
-            value={currency}
-            onValueChange={setCurrency}
-          />
-          <View className="flex-row items-center gap-3">
-            <Text className="text-sm text-muted-foreground">1 EUR =</Text>
-            <TextInput
-              value={rateText}
-              onChangeText={(t) => {
-                if (/^\d*\.?\d{0,4}$/.test(t) || t === "") setRateText(t);
-              }}
-              onBlur={handleRateBlur}
-              keyboardType="decimal-pad"
-              textAlignVertical="center"
-              className="w-20 rounded-lg border border-input bg-background px-3 py-2 text-center text-base leading-5 text-foreground"
-              placeholderTextColor={
-                isDarkColorScheme ? "hsl(30, 5%, 55%)" : "hsl(30, 5%, 45%)"
-              }
-            />
-            <Text className="text-sm text-muted-foreground">CAD</Text>
-          </View>
-        </CardContent>
-      </Card>
+      <Tabs value={tab} onValueChange={setTab} className="flex-1">
+        <TabsList className="mx-4 mb-3">
+          <TabsTrigger value="general">
+            <Text>General</Text>
+          </TabsTrigger>
+          <TabsTrigger value="categories">
+            <Text>Categories</Text>
+          </TabsTrigger>
+          <TabsTrigger value="recurring">
+            <Text>Recurring</Text>
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Budget Split */}
-      <BudgetEditor
-        essential={budget.essentialPercent}
-        discretionary={budget.discretionaryPercent}
-        investment={budget.investmentPercent}
-        onSave={handleSaveBudget}
-        className="mx-4"
-      />
-
-      {/* Categories */}
-      <View className="px-4">
-        <View className="flex-row items-center justify-between mb-2">
-          <Text variant="large">Categories</Text>
-          <Button
-            variant="ghost"
-            size="sm"
-            onPress={() => {
-              setEditingCategory(null);
-              setCatDialogOpen(true);
-            }}
+        <TabsContent value="general" className="flex-1">
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 40, gap: 12, paddingHorizontal: 16 }}
+            keyboardShouldPersistTaps="handled"
           >
-            <Text className="text-primary text-sm">+ Add</Text>
-          </Button>
-        </View>
-        <Card>
-          <CardContent className="px-0 py-0">
-            {allCategories.map((cat) => (
-              <SwipeableRow
-                key={cat.id}
-                onDelete={() => handleDeleteCategory(cat.id)}
-              >
-                <CategoryEditRow
-                  icon={cat.icon}
-                  name={cat.name}
-                  type={cat.type}
-                  budgetType={cat.budgetType}
+            {/* Currency */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Currency
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="gap-4">
+                <SegmentedControl<Currency>
+                  segments={[
+                    { label: "EUR (\u20ac)", value: "EUR" },
+                    { label: "CAD (CA$)", value: "CAD" },
+                  ]}
+                  value={currency}
+                  onValueChange={setCurrency}
                 />
-              </SwipeableRow>
-            ))}
-          </CardContent>
-        </Card>
-      </View>
-
-      {/* Recurring Items */}
-      <View className="px-4">
-        <View className="flex-row items-center justify-between mb-2">
-          <Text variant="large">Recurring</Text>
-          <Button
-            variant="ghost"
-            size="sm"
-            onPress={() => {
-              setEditingRecurring(null);
-              setRecDialogOpen(true);
-            }}
-          >
-            <Text className="text-primary text-sm">+ Add</Text>
-          </Button>
-        </View>
-        <Card>
-          <CardContent className="px-0 py-0">
-            {recurringItemsRaw.length === 0 ? (
-              <Text className="py-4 text-center text-muted-foreground">
-                No recurring items
-              </Text>
-            ) : (
-              recurringItemsRaw.map(({ recurringItem: item }) => (
-                <SwipeableRow
-                  key={item.id}
-                  onDelete={() => handleDeleteRecurring(item.id)}
-                >
-                  <RecurringItemRow
-                    name={item.name}
-                    amount={item.amount}
-                    currency={item.currency}
-                    type={item.type}
-                    isActive={item.isActive}
-                    onToggle={(active) =>
-                      handleToggleRecurring(item.id, active)
+                <View className="flex-row items-center gap-3">
+                  <Text className="text-sm text-muted-foreground">1 EUR =</Text>
+                  <TextInput
+                    value={rateText}
+                    onChangeText={(t) => {
+                      if (/^\d*\.?\d{0,4}$/.test(t) || t === "") setRateText(t);
+                    }}
+                    onBlur={handleRateBlur}
+                    keyboardType="decimal-pad"
+                    textAlignVertical="center"
+                    className="w-20 rounded-lg border border-input bg-background px-3 py-2 text-center text-base leading-5 text-foreground"
+                    placeholderTextColor={
+                      isDarkColorScheme ? PLACEHOLDER_COLORS.dark : PLACEHOLDER_COLORS.light
                     }
                   />
-                </SwipeableRow>
-              ))
-            )}
-          </CardContent>
-        </Card>
-      </View>
+                  <Text className="text-sm text-muted-foreground">CAD</Text>
+                </View>
+              </CardContent>
+            </Card>
+
+            {/* Budget Split */}
+            <BudgetEditor
+              essential={budget.essentialPercent}
+              discretionary={budget.discretionaryPercent}
+              investment={budget.investmentPercent}
+              onSave={handleSaveBudget}
+            />
+          </ScrollView>
+        </TabsContent>
+
+        <TabsContent value="categories" className="flex-1">
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 40, paddingHorizontal: 16 }}
+          >
+            <View className="flex-row items-center justify-between mb-2">
+              <Text variant="large">Categories</Text>
+              <Button
+                variant="ghost"
+                size="sm"
+                onPress={() => {
+                  setEditingCategory(null);
+                  setCatDialogOpen(true);
+                }}
+              >
+                <Text className="text-primary text-sm">+ Add</Text>
+              </Button>
+            </View>
+            <Card>
+              <CardContent className="px-0 py-0">
+                {allCategories.map((cat) => (
+                  <SwipeableRow
+                    key={cat.id}
+                    onDelete={() => handleDeleteCategory(cat.id)}
+                  >
+                    <CategoryEditRow
+                      icon={cat.icon}
+                      name={cat.name}
+                      type={cat.type}
+                      budgetType={cat.budgetType}
+                    />
+                  </SwipeableRow>
+                ))}
+              </CardContent>
+            </Card>
+          </ScrollView>
+        </TabsContent>
+
+        <TabsContent value="recurring" className="flex-1">
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 40, paddingHorizontal: 16 }}
+          >
+            <View className="flex-row items-center justify-between mb-2">
+              <Text variant="large">Recurring</Text>
+              <Button
+                variant="ghost"
+                size="sm"
+                onPress={() => {
+                  setEditingRecurring(null);
+                  setRecDialogOpen(true);
+                }}
+              >
+                <Text className="text-primary text-sm">+ Add</Text>
+              </Button>
+            </View>
+            <Card>
+              <CardContent className="px-0 py-0">
+                {recurringItemsRaw.length === 0 ? (
+                  <Text className="py-4 text-center text-muted-foreground">
+                    No recurring items
+                  </Text>
+                ) : (
+                  recurringItemsRaw.map(({ recurringItem: item }) => (
+                    <SwipeableRow
+                      key={item.id}
+                      onDelete={() => handleDeleteRecurring(item.id)}
+                    >
+                      <RecurringItemRow
+                        name={item.name}
+                        amount={item.amount}
+                        currency={item.currency}
+                        type={item.type}
+                        isActive={item.isActive}
+                        onToggle={(active) =>
+                          handleToggleRecurring(item.id, active)
+                        }
+                      />
+                    </SwipeableRow>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          </ScrollView>
+        </TabsContent>
+      </Tabs>
 
       {/* Dialogs */}
       <EditCategoryDialog
@@ -270,6 +292,6 @@ export default function SettingsScreen() {
         categories={allCategories}
         onSave={handleSaveRecurring}
       />
-    </ScrollView>
+    </View>
   );
 }

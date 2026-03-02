@@ -5,14 +5,14 @@ import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 
 const COLORS = [
-  "#e57c23",
-  "#8b5cf6",
-  "#0ea5e9",
-  "#22c55e",
-  "#ef4444",
-  "#f59e0b",
-  "#6366f1",
-  "#14b8a6",
+  "#c27a4a",
+  "#9b7cb8",
+  "#5d8faf",
+  "#6d9b72",
+  "#c45c5c",
+  "#c4993d",
+  "#7a7db8",
+  "#5d9b8f",
 ];
 
 type PieChartCardProps = {

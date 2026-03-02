@@ -9,7 +9,7 @@ export const NAV_THEME = {
       border: "hsl(33, 12%, 89%)",
       card: "hsl(36, 18%, 95%)",
       notification: "hsl(0, 72%, 51%)",
-      primary: "hsl(30, 10%, 15%)",
+      primary: "hsl(215, 40%, 45%)",
       text: "hsl(30, 10%, 11%)",
     },
   } satisfies Theme,
@@ -17,12 +17,12 @@ export const NAV_THEME = {
     dark: true,
     fonts: DefaultTheme.fonts,
     colors: {
-      background: "hsl(30, 5%, 10%)",
-      border: "hsl(30, 5%, 20%)",
-      card: "hsl(30, 5%, 13%)",
+      background: "hsl(20, 4%, 16%)",
+      border: "hsl(20, 5%, 26%)",
+      card: "hsl(20, 4%, 19%)",
       notification: "hsl(0, 62%, 55%)",
-      primary: "hsl(33, 10%, 88%)",
-      text: "hsl(33, 10%, 88%)",
+      primary: "hsl(215, 40%, 50%)",
+      text: "hsl(35, 18%, 85%)",
     },
   } satisfies Theme,
 };
@@ -30,10 +30,15 @@ export const NAV_THEME = {
 export const CHART_COLORS = {
   income: "hsl(142, 60%, 40%)",
   expense: "hsl(0, 72%, 51%)",
-  savings: "hsl(210, 60%, 50%)",
-  essential: "hsl(25, 80%, 52%)",
-  discretionary: "hsl(270, 50%, 55%)",
-  investment: "hsl(175, 60%, 40%)",
+  savings: "hsl(200, 60%, 50%)",
+  essential: "hsl(8, 55%, 52%)",
+  discretionary: "hsl(38, 65%, 52%)",
+  investment: "hsl(150, 35%, 42%)",
+};
+
+export const PLACEHOLDER_COLORS = {
+  light: "hsl(30, 5%, 45%)",
+  dark: "hsl(30, 8%, 55%)",
 };
 
 export const CATEGORY_ICONS: Record<string, string> = {

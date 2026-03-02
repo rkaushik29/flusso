@@ -1,5 +1,5 @@
 import { Pressable } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 import { cn } from "@/lib/utils";
 
 export function Fab({
@@ -17,7 +17,7 @@ export function Fab({
         className
       )}
     >
-      <MaterialIcons name="add" size={28} color="hsl(36, 20%, 97%)" />
+      <AppIcon name="add" size={28} />
     </Pressable>
   );
 }

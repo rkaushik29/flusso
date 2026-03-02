@@ -1,7 +1,6 @@
 import { View } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 import { Text } from "@/components/ui/text";
-import type { ComponentProps } from "react";
 
 type CategoryBreakdownRowProps = {
   icon: string;
@@ -23,11 +22,7 @@ export function CategoryBreakdownRow({
   return (
     <View className="flex-row items-center gap-3 py-2">
       <View className="h-8 w-8 items-center justify-center rounded-full bg-muted">
-        <MaterialIcons
-          name={icon as ComponentProps<typeof MaterialIcons>["name"]}
-          size={16}
-          className="text-foreground"
-        />
+        <AppIcon name={icon} size={16} />
       </View>
       <View className="flex-1 gap-1">
         <View className="flex-row items-center justify-between">

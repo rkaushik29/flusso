@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pressable, View } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 import Animated, {
   useAnimatedStyle,
   withTiming,
@@ -80,7 +80,7 @@ export function BudgetSection({
           />
         </View>
         <Animated.View style={chevronStyle} className="ml-2">
-          <MaterialIcons name="chevron-right" size={20} className="text-muted-foreground" />
+          <AppIcon name="chevron-right" size={20} color="hsl(30, 8%, 55%)" weight="bold" />
         </Animated.View>
       </Pressable>
       <Animated.View style={contentStyle}>

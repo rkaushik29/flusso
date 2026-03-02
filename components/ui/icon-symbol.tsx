@@ -1,25 +1,15 @@
-// Fallback for using MaterialIcons on Android and web.
+import { AppIcon } from "@/components/app-icon";
+import type { SymbolWeight, SymbolViewProps } from "expo-symbols";
+import type { OpaqueColorValue, StyleProp, TextStyle } from "react-native";
 
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { SymbolWeight, SymbolViewProps } from "expo-symbols";
-import { ComponentProps } from "react";
-import {
-  OpaqueColorValue,
-  type StyleProp,
-  type TextStyle,
-} from "react-native";
-
-type IconMapping = Record<
-  SymbolViewProps["name"],
-  ComponentProps<typeof MaterialIcons>["name"]
->;
+type IconMapping = Record<string, string>;
 type IconSymbolName = keyof typeof MAPPING;
 
-const MAPPING = {
+const MAPPING: IconMapping = {
   // Navigation
   "house.fill": "home",
-  "paperplane.fill": "send",
-  "chevron.left.forwardslash.chevron.right": "code",
+  "paperplane.fill": "attach-money",
+  "chevron.left.forwardslash.chevron.right": "more-horiz",
   "chevron.right": "chevron-right",
   "chevron.left": "chevron-left",
   // Tabs
@@ -28,23 +18,22 @@ const MAPPING = {
   "gearshape.fill": "settings",
   // Finance
   "dollarsign.circle.fill": "attach-money",
-  "creditcard.fill": "credit-card",
-  "arrow.up.circle.fill": "arrow-upward",
-  "arrow.down.circle.fill": "arrow-downward",
+  "creditcard.fill": "attach-money",
+  "arrow.up.circle.fill": "trending-up",
+  "arrow.down.circle.fill": "trending-up",
   // Actions
   "trash.fill": "delete",
-  "pencil": "edit",
-  "xmark": "close",
-  "checkmark": "check",
+  "pencil": "more-horiz",
+  "xmark": "more-horiz",
+  "checkmark": "more-horiz",
   "camera.fill": "camera-alt",
   "photo.fill": "photo",
-} as IconMapping;
+};
 
 export function IconSymbol({
   name,
   size = 24,
   color,
-  style,
 }: {
   name: IconSymbolName;
   size?: number;
@@ -52,12 +41,6 @@ export function IconSymbol({
   style?: StyleProp<TextStyle>;
   weight?: SymbolWeight;
 }) {
-  return (
-    <MaterialIcons
-      color={color}
-      size={size}
-      name={MAPPING[name]}
-      style={style}
-    />
-  );
+  const mapped = MAPPING[name as string] ?? "more-horiz";
+  return <AppIcon name={mapped} size={size} color={color as string} />;
 }

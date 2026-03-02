@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useTransactionForm } from "@/hooks/use-transaction-form";
 import { useColorScheme } from "@/lib/theme";
+import { PLACEHOLDER_COLORS } from "@/lib/constants";
 import type { ParsedReceipt } from "@/lib/ocr";
 
 const TYPE_SEGMENTS = [
@@ -120,7 +121,7 @@ export default function AddScreen() {
                 value={form.description}
                 onChangeText={form.setDescription}
                 placeholder="Coffee, groceries, etc."
-                placeholderTextColor={isDarkColorScheme ? "hsl(30, 5%, 55%)" : "hsl(30, 5%, 45%)"}
+                placeholderTextColor={isDarkColorScheme ? PLACEHOLDER_COLORS.dark : PLACEHOLDER_COLORS.light}
                 className="rounded-lg border border-input bg-background px-3 py-2.5 text-base text-foreground"
               />
             </View>
@@ -132,7 +133,7 @@ export default function AddScreen() {
                 value={form.date}
                 onChangeText={form.setDate}
                 placeholder="YYYY-MM-DD"
-                placeholderTextColor={isDarkColorScheme ? "hsl(30, 5%, 55%)" : "hsl(30, 5%, 45%)"}
+                placeholderTextColor={isDarkColorScheme ? PLACEHOLDER_COLORS.dark : PLACEHOLDER_COLORS.light}
                 className="rounded-lg border border-input bg-background px-3 py-2.5 text-base text-foreground"
               />
             </View>

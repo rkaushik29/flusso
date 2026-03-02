@@ -1,11 +1,10 @@
 import { View } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AppIcon } from "@/components/app-icon";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
-import type { ComponentProps } from "react";
 
 type TransactionRowProps = {
-  icon: ComponentProps<typeof MaterialIcons>["name"];
+  icon: string;
   description: string;
   category: string;
   amount: number;
@@ -26,7 +25,7 @@ export function TransactionRow({
   return (
     <View className={cn("flex-row items-center gap-3 px-3 py-2.5", className)}>
       <View className="h-9 w-9 items-center justify-center rounded-full bg-muted">
-        <MaterialIcons name={icon} size={18} className="text-foreground" />
+        <AppIcon name={icon} size={18} />
       </View>
       <View className="flex-1">
         <Text className="text-sm font-medium" numberOfLines={1}>

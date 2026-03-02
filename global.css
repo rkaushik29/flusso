@@ -8,8 +8,8 @@
     --foreground: 30 10% 11%;
     --card: 36 18% 95%;
     --card-foreground: 30 10% 11%;
-    --primary: 30 10% 15%;
-    --primary-foreground: 36 20% 97%;
+    --primary: 215 40% 45%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 36 10% 90%;
     --secondary-foreground: 30 10% 20%;
     --muted: 36 10% 92%;
@@ -20,45 +20,47 @@
     --destructive-foreground: 0 0% 100%;
     --border: 33 12% 89%;
     --input: 33 12% 85%;
-    --ring: 30 10% 15%;
+    --ring: 215 40% 45%;
     --radius: 12px;
     --popover: 36 18% 95%;
     --popover-foreground: 30 10% 11%;
 
     --income: 142 60% 40%;
     --expense: 0 72% 51%;
-    --savings: 210 60% 50%;
-    --essential: 25 80% 52%;
-    --discretionary: 270 50% 55%;
-    --investment: 175 60% 40%;
+    --savings: 200 60% 50%;
+    --essential: 8 55% 52%;
+    --discretionary: 38 65% 52%;
+    --investment: 150 35% 42%;
   }
 
-  .dark {
-    --background: 30 5% 10%;
-    --foreground: 33 10% 88%;
-    --card: 30 5% 13%;
-    --card-foreground: 33 10% 88%;
-    --primary: 33 10% 88%;
-    --primary-foreground: 30 5% 10%;
-    --secondary: 30 4% 18%;
-    --secondary-foreground: 33 10% 80%;
-    --muted: 30 4% 18%;
-    --muted-foreground: 30 5% 55%;
-    --accent: 30 4% 20%;
-    --accent-foreground: 33 10% 88%;
-    --destructive: 0 62% 55%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 30 5% 20%;
-    --input: 30 5% 22%;
-    --ring: 33 10% 88%;
-    --popover: 30 5% 13%;
-    --popover-foreground: 33 10% 88%;
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: 20 4% 16%;
+      --foreground: 35 18% 85%;
+      --card: 20 4% 19%;
+      --card-foreground: 35 18% 85%;
+      --primary: 215 40% 50%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 20 3% 22%;
+      --secondary-foreground: 35 14% 75%;
+      --muted: 20 3% 22%;
+      --muted-foreground: 30 8% 55%;
+      --accent: 20 4% 24%;
+      --accent-foreground: 35 18% 85%;
+      --destructive: 0 62% 55%;
+      --destructive-foreground: 0 0% 100%;
+      --border: 20 5% 26%;
+      --input: 20 5% 28%;
+      --ring: 215 40% 50%;
+      --popover: 20 4% 19%;
+      --popover-foreground: 35 18% 85%;
 
-    --income: 142 55% 45%;
-    --expense: 0 62% 55%;
-    --savings: 210 55% 55%;
-    --essential: 25 75% 55%;
-    --discretionary: 270 45% 60%;
-    --investment: 175 55% 45%;
+      --income: 142 55% 45%;
+      --expense: 0 62% 55%;
+      --savings: 200 55% 55%;
+      --essential: 8 50% 55%;
+      --discretionary: 38 60% 55%;
+      --investment: 150 30% 48%;
+    }
   }
 }
